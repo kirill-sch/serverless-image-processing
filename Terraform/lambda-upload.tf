@@ -2,10 +2,10 @@ data "archive_file" "image_upload_functions_lambda_zip" {
   source_dir  = "src/image/upload/python"
   output_path = "/tmp/image_upload_functions_lambda.zip"
   type        = "zip"
-  depends_on  = [null_resource.build_dependencies]
+  depends_on  = [null_resource.build_dependencies_for_image_upload]
 }
 
-resource "null_resource" "build_dependencies" {
+resource "null_resource" "build_dependencies_for_image_upload" {
   provisioner "local-exec" {
     command = <<EOT
     rm -rf src/image/upload/python/
