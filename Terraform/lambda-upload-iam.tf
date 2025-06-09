@@ -1,6 +1,6 @@
 resource "aws_iam_role" "image_upload_functions_lambda_role" {
-  name               = "${var.project_name}_imagefunctions_lambda_role"
-  description        = "Lambda function IAM role"
+  name               = "${var.project_name}_image_upload_functions_lambda_role"
+  description        = "Upload image lambda function IAM role"
   assume_role_policy = <<EOF
   {
   "Version": "2012-10-17",
@@ -18,8 +18,8 @@ EOF
 }
 
 resource "aws_iam_policy" "image_upload_functions_lambda_role_policy" {
-  name        = "${var.project_name}_imagefunctions_lamda_role_policy"
-  description = "Lambda function policy"
+  name        = "${var.project_name}_image_upload_functions_lamda_role_policy"
+  description = "Lambda function policy for image upload"
 
   policy = <<EOF
   {
