@@ -14,6 +14,15 @@ resource "aws_api_gateway_rest_api" "rest_api" {
             uri        = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.image_upload_functions_lambda.arn}/invocations"
           }
         }
+      },
+      "/images/{image_id}" = {
+        get = {
+          x-amazon-apigateway-integration = {
+            httpMethod = "POST"
+            type = "aws_proxy"
+            uri = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.image_download_functions_lambda.arn}/invocations"
+          }
+        }
       }
     }
   })
@@ -44,10 +53,18 @@ resource "aws_api_gateway_stage" "rest_api" {
   xray_tracing_enabled = true  
 }
 
-resource "aws_lambda_permission" "allow_apigateway" {
-  statement_id  = "AllowExecutionFromAPIGateway"
+resource "aws_lambda_permission" "allow_apigateway_upload" {
+  statement_id  = "AllowExecutionFromAPIGatewayUpload"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.image_upload_functions_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.rest_api.execution_arn}/*/*/*"
+}
+
+resource "aws_lambda_permission" "allow_apigateway_download" {
+  statement_id  = "AllowExecutionFromAPIGatewayDownload"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.image_download_functions_lambda.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.rest_api.execution_arn}/*/*/*"
 }
