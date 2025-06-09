@@ -4,6 +4,7 @@ import os
 import boto3
 import base64
 import traceback
+import mimetypes
 from datetime import datetime
 
 IMAGES_TABLE = os.getenv('IMAGES_TABLE', None)
@@ -27,8 +28,8 @@ def lambda_handler(event, context):
             request_json = json.loads(event['body'])
 
              
-            if 'image_data' not in request_json:
-                    raise ValueError("Missing 'image_data' in request")
+            if 'image_data' not in request_json or 'content_type' not in request_json:
+                    raise ValueError("Missing 'image_data' or 'content_type' in request")
             try:
                 image_bytes = base64.b64decode(request_json['image_data'], validate=True)
             except (base64.binascii.Error, ValueError):
@@ -42,7 +43,9 @@ def lambda_handler(event, context):
                 raise ValueError("Unsupported image format (must be JPG or PNG)")            
             
             timestamp = datetime.now().isoformat()
-            image_id = str(uuid.uuid4())                                    
+            image_id = str(uuid.uuid4())
+            content_type = request_json.get('content_type', 'image/jpeg')
+            file_extension = mimetypes.guess_extension(content_type) or '.jpg'
             
             s3.put_object(
                 Bucket=BUCKET_NAME,
@@ -52,7 +55,7 @@ def lambda_handler(event, context):
 
             ddbtable.put_item(Item={
                 'image_id': image_id,
-                's3_key': f"uploads/{image_id}",
+                's3_key': f"uploads/{image_id}{file_extension}",
                 'upload_time': timestamp,
                 'status': 'pending'
             })
@@ -69,6 +72,7 @@ def lambda_handler(event, context):
         response_body = {'error': str(err)}
         traceback.print_exc()
         print(str(err))
+        
     response = {
         'statusCode': status_code,
         'body': json.dumps(response_body),
