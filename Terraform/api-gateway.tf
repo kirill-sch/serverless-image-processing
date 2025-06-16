@@ -11,7 +11,7 @@ resource "aws_api_gateway_rest_api" "rest_api" {
           x-amazon-apigateway-integration = {
             httpMethod = "POST"
             type       = "aws_proxy"
-            uri        = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.image_upload_functions_lambda.arn}/invocations"
+            uri        = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.sfn_starter.arn}/invocations"
           }
         }
       },
@@ -56,7 +56,7 @@ resource "aws_api_gateway_stage" "rest_api" {
 resource "aws_lambda_permission" "allow_apigateway_upload" {
   statement_id  = "AllowExecutionFromAPIGatewayUpload"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.image_upload_functions_lambda.function_name
+  function_name = aws_lambda_function.sfn_starter.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_api_gateway_rest_api.rest_api.execution_arn}/*/*/*"
 }
