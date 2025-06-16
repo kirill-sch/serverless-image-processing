@@ -22,18 +22,18 @@ resource "null_resource" "build_dependencies_for_image_download" {
 }
 
 resource "aws_lambda_function" "image_download_functions_lambda" {
-  filename = data.archive_file.image_download_functions_lambda_zip.output_path
-  function_name = "${var.project_name}"
-  description = "Handler for image download related operations."
-  role = aws_iam_role.image_download_functions_lambda_role.arn
-  handler = "lambda_function.lambda_handler"
+  filename         = data.archive_file.image_download_functions_lambda_zip.output_path
+  function_name    = var.project_name
+  description      = "Handler for image download related operations."
+  role             = aws_iam_role.image_download_functions_lambda_role.arn
+  handler          = "lambda_function.lambda_handler"
   source_code_hash = data.archive_file.image_download_functions_lambda_zip.output_base64sha256
-  runtime = var.lambda_runtime
-  timeout = var.lambda_timeout
+  runtime          = var.lambda_runtime
+  timeout          = var.lambda_timeout
 
   tracing_config {
     mode = var.lambda_tracing_config
-  } 
+  }
 
   environment {
     variables = {

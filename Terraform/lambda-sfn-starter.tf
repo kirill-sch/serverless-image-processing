@@ -1,8 +1,8 @@
 data "archive_file" "sfn_starter_lambda_zip" {
-  source_dir = "src/image/sfn/python"
+  source_dir  = "src/image/sfn/python"
   output_path = "/tmp/sfn_starter_lambda_zip"
-  type = "zip"
-  depends_on = [ null_resource.dependency_builder_sfn_starter_lambda ]
+  type        = "zip"
+  depends_on  = [null_resource.dependency_builder_sfn_starter_lambda]
 }
 
 resource "null_resource" "dependency_builder_sfn_starter_lambda" {
@@ -16,20 +16,20 @@ resource "null_resource" "dependency_builder_sfn_starter_lambda" {
   }
 
   triggers = {
-     dependencies = filemd5("src/image/sfn/requirements.txt")
+    dependencies = filemd5("src/image/sfn/requirements.txt")
     source       = filemd5("src/image/sfn/lambda_function.py")
   }
 }
 
 resource "aws_lambda_function" "sfn_starter" {
-  filename = data.archive_file.sfn_starter_lambda_zip.output_path
-  function_name = "${var.project_name}_sfn_starter_lambda"
-  description = "This lambda will recieve the HTTP request and start the sfn."
-  role = aws_iam_role.sfn_starter_lambda_role.arn
-  handler = "lambda_function.lambda_handler"
+  filename         = data.archive_file.sfn_starter_lambda_zip.output_path
+  function_name    = "${var.project_name}_sfn_starter_lambda"
+  description      = "This lambda will recieve the HTTP request and start the sfn."
+  role             = aws_iam_role.sfn_starter_lambda_role.arn
+  handler          = "lambda_function.lambda_handler"
   source_code_hash = data.archive_file.sfn_starter_lambda_zip.output_base64sha256
-  runtime = var.lambda_runtime
-  timeout = var.lambda_timeout
+  runtime          = var.lambda_runtime
+  timeout          = var.lambda_timeout
 
   tracing_config {
     mode = var.lambda_tracing_config

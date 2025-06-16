@@ -6,10 +6,10 @@ resource "aws_sfn_state_machine" "image_upload_workflow" {
     StartAt = "validate"
     States = {
       validate = {
-        Type          = "Task"
-        Resource      = aws_lambda_function.image_validate_functions_lambda.arn
-        ResultPath    = "$.validation_result"
-        Next          = "virus_scan"
+        Type           = "Task"
+        Resource       = aws_lambda_function.image_validate_functions_lambda.arn
+        ResultPath     = "$.validation_result"
+        Next           = "virus_scan"
         TimeoutSeconds = 120
         Catch = [
           {
@@ -64,9 +64,9 @@ resource "aws_sfn_state_machine" "image_upload_workflow" {
         ]
       }
       exception = {
-        Type       = "Fail"
-        Cause      = "Image processing failed"
-        Error      = "ExceptionStateReached"
+        Type  = "Fail"
+        Cause = "Image processing failed"
+        Error = "ExceptionStateReached"
       }
       succeeded = {
         Type = "Pass"

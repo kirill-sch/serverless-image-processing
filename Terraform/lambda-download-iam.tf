@@ -1,6 +1,6 @@
 resource "aws_iam_role" "image_download_functions_lambda_role" {
-  name = "${var.project_name}_image_download_functions_lambda_role"
-  description = "Download image lambda function IAM role"
+  name               = "${var.project_name}_image_download_functions_lambda_role"
+  description        = "Download image lambda function IAM role"
   assume_role_policy = <<EOF
   {
   "Version": "2012-10-17",
@@ -18,7 +18,7 @@ resource "aws_iam_role" "image_download_functions_lambda_role" {
 }
 
 resource "aws_iam_policy" "image_download_functions_lambda_role_policy" {
-  name = "${var.project_name}_image_download_functions_lambda_role_policy"
+  name        = "${var.project_name}_image_download_functions_lambda_role_policy"
   description = "Lambda function policy for image upload"
 
   policy = <<EOF
@@ -55,7 +55,7 @@ EOF
 }
 
 resource "aws_iam_policy_attachment" "image_download_functions_lambda_attach" {
-  name = "${var.project_name}_image_download_functions_lambda_attachment"
-  roles = [ aws_iam_role.image_download_functions_lambda_role.name ]
+  name       = "${var.project_name}_image_download_functions_lambda_attachment"
+  roles      = [aws_iam_role.image_download_functions_lambda_role.name]
   policy_arn = aws_iam_policy.image_download_functions_lambda_role_policy.arn
 }

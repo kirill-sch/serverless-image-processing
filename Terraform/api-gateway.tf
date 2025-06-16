@@ -19,8 +19,8 @@ resource "aws_api_gateway_rest_api" "rest_api" {
         get = {
           x-amazon-apigateway-integration = {
             httpMethod = "POST"
-            type = "aws_proxy"
-            uri = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.image_download_functions_lambda.arn}/invocations"
+            type       = "aws_proxy"
+            uri        = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.image_download_functions_lambda.arn}/invocations"
           }
         }
       }
@@ -49,8 +49,8 @@ resource "aws_api_gateway_deployment" "rest_api" {
 resource "aws_api_gateway_stage" "rest_api" {
   deployment_id        = aws_api_gateway_deployment.rest_api.id
   rest_api_id          = aws_api_gateway_rest_api.rest_api.id
-  stage_name           = "Prod"  
-  xray_tracing_enabled = true  
+  stage_name           = "Prod"
+  xray_tracing_enabled = true
 }
 
 resource "aws_lambda_permission" "allow_apigateway_upload" {
