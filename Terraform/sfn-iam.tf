@@ -18,7 +18,7 @@ resource "aws_iam_role" "sfn_role" {
 resource "aws_iam_policy" "sfn_role_policy" {
   name = "${var.project_name}_sfn_role_policy"
   policy = jsonencode({
-    Version = "2017-10-17"
+    Version = "2012-10-17"
     Statement = [
         {
             Effect = "Allow",
@@ -27,7 +27,8 @@ resource "aws_iam_policy" "sfn_role_policy" {
             ],
             Resource = [
                 aws_lambda_function.image_validate_functions_lambda.arn,
-                .
+                aws_lambda_function.image_virus_scan_lambda.arn,
+                aws_lambda_function.image_resize_lambda.arn
             ]
         },
         {
