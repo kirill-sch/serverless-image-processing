@@ -23,12 +23,13 @@ def lambda_handler(event, context):
             image_id = str(uuid.uuid4())
             content_type = request_json.get('content_type', 'image/jpeg')
             file_extension = mimetypes.guess_extension(content_type) or '.jpg'
+            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
             
             return {
                   "validation": "passed",
                   "image_id": image_id,
                   "file_extension": file_extension,
-                  "image_bytes": image_bytes,                  
+                  "image_bytes": image_base64,                  
                   "upload_time": timestamp,
                   "status": "pending"
             }
