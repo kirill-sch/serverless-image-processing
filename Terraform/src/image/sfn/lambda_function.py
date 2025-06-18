@@ -20,10 +20,20 @@ def lambda_handler(event, context):
             "body": json.dumps({"error": "Missing content_type"})
         }
     
-    response = sfn.start_execution(
-        stateMachineArn=SFN_ARN,
-        input=json.dumps(body)
-    )
+    try:
+        response = sfn.start_execution(
+            stateMachineArn=SFN_ARN,
+            input=json.dumps({
+                "body": body
+            })
+        )
+    except Exception as e:
+        return {
+            "statusCode": 400,
+            "body": json.dumps({
+                "message": str(e)
+            })
+        }        
 
     return {
         "statusCode": 202,
