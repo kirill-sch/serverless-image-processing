@@ -34,6 +34,12 @@ resource "aws_lambda_function" "image_validate_functions_lambda" {
   tracing_config {
     mode = var.lambda_tracing_config
   }
+
+  environment {
+    variables = {
+      IMAGES_TABLE = aws_dynamodb_table.image_metadata_table.id
+    }
+  }
 }
 
 output "image_validate_functions_lambda" {

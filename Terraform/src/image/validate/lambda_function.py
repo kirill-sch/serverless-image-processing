@@ -2,6 +2,12 @@ import uuid
 import base64
 import mimetypes
 from datetime import datetime
+import boto3
+import os
+
+IMAGES_TABLE = os.getenv('IMAGES_TABLE', None)
+dynamodb = boto3.resource('dynamodb')
+ddbtable = dynamodb.Table(IMAGES_TABLE)
 
 def lambda_handler(event, context):
     
@@ -24,6 +30,15 @@ def lambda_handler(event, context):
             content_type = request_json.get('content_type', 'image/jpeg')
             file_extension = mimetypes.guess_extension(content_type) or '.jpg'
             image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+
+            try:
+                ddbtable.put_item(Item={
+                      'image_id': image_id,
+                      'upload_time': timestamp,                  
+                      'status': 'pending'
+                })
+            except Exception as e:
+                 raise Exception("Dynamodb insert failed: " + str(e))            
             
             return {
                   "validation": "passed",
