@@ -28,7 +28,8 @@ resource "aws_iam_policy" "sfn_role_policy" {
         Resource = [
           aws_lambda_function.image_validate_functions_lambda.arn,
           aws_lambda_function.image_virus_scan_lambda.arn,
-          aws_lambda_function.image_resize_lambda.arn
+          aws_lambda_function.image_resize_lambda.arn,
+          aws_lambda_function.image_submission_functions_lambda.arn
         ]
       },
       {

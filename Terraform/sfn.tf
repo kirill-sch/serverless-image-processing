@@ -53,13 +53,26 @@ resource "aws_sfn_state_machine" "image_upload_workflow" {
         Type           = "Task"
         Resource       = aws_lambda_function.image_resize_lambda.arn
         ResultPath     = "$.resize_result"
-        Next           = "succeeded"
+        Next           = "submission"
         TimeoutSeconds = 120
         Catch = [
           {
             ErrorEquals = ["States.ALL"]
             ResultPath  = "$.error"
             Next        = "exception"
+          }
+        ]
+      }
+submission = {
+        Type = "Task"
+        Resource = aws_lambda_function.image_submission_functions_lambda.arn
+        Next = "succeeded"
+        TimeoutSeconds = 120
+        Catch = [
+          {
+            ErrorEquals = ["States.ALL"]
+            ResultPath = "$.error"
+            Next = "exception"
           }
         ]
       }
