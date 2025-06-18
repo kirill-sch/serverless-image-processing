@@ -38,7 +38,7 @@ resource "aws_lambda_function" "image_submission_functions_lambda" {
   environment {
     variables = {
       IMAGES_TABLE = aws_dynamodb_table.image_metadata_table.id
-      BUCKET_NAME = aws_s3_bucket.image_bucket.bucket
+      BUCKET_NAME  = aws_s3_bucket.image_bucket.bucket
     }
   }
 }

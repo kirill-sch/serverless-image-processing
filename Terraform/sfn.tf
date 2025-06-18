@@ -64,15 +64,15 @@ resource "aws_sfn_state_machine" "image_upload_workflow" {
         ]
       }
       submission = {
-        Type = "Task"
-        Resource = aws_lambda_function.image_submission_functions_lambda.arn
-        Next = "succeeded"
+        Type           = "Task"
+        Resource       = aws_lambda_function.image_submission_functions_lambda.arn
+        Next           = "succeeded"
         TimeoutSeconds = 120
         Catch = [
           {
             ErrorEquals = ["States.ALL"]
-            ResultPath = "$.error"
-            Next = "exception"
+            ResultPath  = "$.error"
+            Next        = "exception"
           }
         ]
       }
