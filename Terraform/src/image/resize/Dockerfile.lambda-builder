@@ -1,0 +1,16 @@
+FROM python:3.10-slim
+
+WORKDIR /build
+
+COPY requirements.txt .
+
+# Install system libs needed for Pillow’s manylinux wheels
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+         libjpeg-dev \
+         zlib1g-dev \
+    && pip install --upgrade pip \
+    && pip install -r requirements.txt -t . \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD [ "cp", "-r", ".", "/out" ]
