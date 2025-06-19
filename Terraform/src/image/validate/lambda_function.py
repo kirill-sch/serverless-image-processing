@@ -28,7 +28,8 @@ def lambda_handler(event, context):
             timestamp = datetime.now().isoformat()
             image_id = str(uuid.uuid4())
             content_type = request_json.get('content_type', 'image/jpeg')
-            file_extension = mimetypes.guess_extension(content_type) or '.jpg'
+            file_extension = mimetypes.guess_extension(content_type).lstrip(".").lower()
+            #ext = file_extension.lstrip(".").lower()
             image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
             try:

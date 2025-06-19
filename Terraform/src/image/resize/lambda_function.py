@@ -29,7 +29,7 @@ def lambda_handler(event, context):
 
         output_buffer.seek(0)
         resized_image_bytes = output_buffer.read()
-        encoded_bytes = base64.base64encode(resized_image_bytes).decode("utf-8")
+        encoded_bytes = base64.b64encode(resized_image_bytes).decode("utf-8")
 
         return {
             "original": {
